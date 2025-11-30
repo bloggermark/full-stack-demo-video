@@ -7,6 +7,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import { database } from "./persistent-database.js" // or use "./in-memory-database.js"
 import path from "path"
+import sgMail from "@sendgrid/mail"
 
 const router = express.Router() // Create a router
 
@@ -34,9 +35,41 @@ const upload = multer({ dest: "uploads/" })
 // configure for handling credentials stored in .env
 dotenv.config()
 
+// configure SendGrid API
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 /**
  * Route Definitions
  */
+
+// Journal signup route with email integration
+router.post("/api/journal-signup", csrfProtection, async (req, res) => {
+  try {
+    const { email, name } = req.body
+
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" })
+    }
+
+    const msg = {
+      to: email,
+      from: process.env.FROM_EMAIL, // Your verified sender
+      subject: "Welcome to Our Journal!",
+      text: `Hello ${
+        name || "there"
+      },\n\nThank you for signing up for our journal! We're excited to have you on board.\n\nBest regards,\nThe Team`,
+      html: `<p>Hello ${
+        name || "there"
+      },</p><p>Thank you for signing up for our journal! We're excited to have you on board.</p><p>Best regards,<br>The Team</p>`,
+    }
+
+    await sgMail.send(msg)
+    res.json({ success: true, message: "Welcome email sent successfully" })
+  } catch (error) {
+    console.error("SendGrid error:", error)
+    res.status(500).json({ error: "Failed to send email" })
+  }
+})
 
 // Home route
 router.get("/", async (req, res) => {

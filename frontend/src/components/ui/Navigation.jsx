@@ -58,6 +58,18 @@ function Navigation() {
               >
                 About
               </NavLink>
+              <NavLink
+                to="/newsletter"
+                className={({ isActive }) =>
+                  `font-medium transition-colors ${
+                    isActive
+                      ? "text-blue-600"
+                      : "text-gray-600 hover:text-blue-600"
+                  }`
+                }
+              >
+                Newsletter
+              </NavLink>
               <SignedIn>
                 <NavLink
                   to="/profile"

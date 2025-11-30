@@ -40,19 +40,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
-      {/* Call to Action */}
-      <div className="bg-gray-50 p-8 rounded-lg text-center">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Join the Journey
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Stay updated with my latest posts and coding adventures.
-        </p>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-          Subscribe to Updates
-        </button>
-      </div>
     </div>
   )
 }

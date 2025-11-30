@@ -3,6 +3,7 @@ import Navigation from "./components/ui/Navigation"
 import Home from "./components/Home"
 import About from "./components/About"
 import Profile from "./components/Profile"
+import Newsletter from "./components/Newsletter"
 import "./App.css"
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
