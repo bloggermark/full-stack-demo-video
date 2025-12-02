@@ -6,6 +6,7 @@ import csrf from "csurf"
 import cors from "cors"
 import dotenv from "dotenv"
 import { database } from "./persistent-database.js" // or use "./in-memory-database.js"
+import { blogDatabase } from "./blog-database.js"
 import path from "path"
 import sgMail from "@sendgrid/mail"
 
@@ -157,6 +158,56 @@ router.post("/users/favorite/:id", async (req, res) => {
 // Route for CSRF token (when needed)
 router.get("/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() })
+})
+
+// Blog API routes
+router.get("/api/blog", csrfProtection, async (req, res) => {
+  try {
+    const entries = await blogDatabase.getBlogEntries()
+    res.json(entries)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Failed to fetch blog entries" })
+  }
+})
+
+router.post("/api/blog", csrfProtection, async (req, res) => {
+  try {
+    const newEntry = await blogDatabase.addBlogEntry(req.body)
+    res.status(201).json(newEntry)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Failed to create blog entry" })
+  }
+})
+
+router.put("/api/blog/:id", csrfProtection, async (req, res) => {
+  try {
+    const updatedEntry = await blogDatabase.updateBlogEntry(
+      req.params.id,
+      req.body
+    )
+    if (!updatedEntry) {
+      return res.status(404).json({ error: "Blog entry not found" })
+    }
+    res.json(updatedEntry)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Failed to update blog entry" })
+  }
+})
+
+router.delete("/api/blog/:id", csrfProtection, async (req, res) => {
+  try {
+    const deleted = await blogDatabase.deleteBlogEntry(req.params.id)
+    if (!deleted) {
+      return res.status(404).json({ error: "Blog entry not found" })
+    }
+    res.json({ message: "Blog entry deleted successfully" })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "Failed to delete blog entry" })
+  }
 })
 
 export default router
