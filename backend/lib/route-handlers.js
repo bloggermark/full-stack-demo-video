@@ -22,7 +22,19 @@ router.use(express.static("uploads"))
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(express.json())
 router.use(cookieParser())
-const csrfProtection = csrf({ cookie: true })
+
+// const csrfProtection = csrf({ cookie: true })
+const isProd = process.env.NODE_ENV === "production"
+const csrfProtection = csrf({
+  cookie: isProd
+    ? {
+        httpOnly: true,
+        sameSite: "none", // allow cross-site cookie
+        secure: true, // required with SameSite=None on HTTPS
+      }
+    : true, // in dev this becomes { cookie: true }
+})
+
 router.use(
   cors({
     origin: true, // Allows any origin
