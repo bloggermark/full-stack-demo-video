@@ -9,7 +9,7 @@ export default function Accordion({
   formatDate,
 }) {
   const { user } = useUser()
-  const { role } = user?.publicMetadata || null
+  const { role } = user?.publicMetadata || { role: "anonymous" }
   if (items.length === 0) {
     return (
       <div className="text-center py-12">

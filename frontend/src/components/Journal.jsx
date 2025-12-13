@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
 
 const Journal = () => {
   const { user } = useUser()
-  const { role } = user?.publicMetadata || null
+  const { role } = user?.publicMetadata || { role: "anonymous" }
 
   const [entries, setEntries] = useState([])
   const [csrfToken, setCsrfToken] = useState("")
